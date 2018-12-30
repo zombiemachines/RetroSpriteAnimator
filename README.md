@@ -1,8 +1,7 @@
 # RetroSpriteAnimator
 Unity component for easily defining and playing 2D sprite animations in script
 
-
-<p><strong>Part 2: An Alternative Workflow for Creating and Playing Animations</strong></p>
+<p><strong>Alternative Workflow for Creating and Playing Animations</strong></p>
 
 <figure data-orig-height="246" data-orig-width="638"><img alt="image" data-orig-height="246" data-orig-width="638" src="https://78.media.tumblr.com/ab3cf4841f14680540de6037f1ad1f4a/tumblr_inline_p77591WVDG1sph69g_540.png" /></figure>
 
@@ -10,9 +9,9 @@ Unity component for easily defining and playing 2D sprite animations in script
 
 <figure data-orig-height="70" data-orig-width="474"><img alt="image" data-orig-height="70" data-orig-width="474" src="https://78.media.tumblr.com/5c36e1549e033c48744e96650fb2bf80/tumblr_inline_p7758s9cnq1sph69g_540.png" /></figure>
 
-<p>Enter&nbsp;<a href="https://github.com/dithyrambs/RetroSpriteAnimator">RetroSpriteAnimator</a>! A neat little component I cooked up that replicates Flixel&#39;s simplicity. And in truth, if you&#39;re going to make a tile-based 2D platformer in Unity, you&#39;re probably going to be using your tile editor as your game editor for the majority of development. You might as well go whole hog and just use Unity as a glorified file manager, and bypass all that mecanim nonsense. (Later in this series I&#39;ll share my code for a component friendly class based state machine that will completely replace mecanim). But anyway, you can start by grabbing&nbsp;<a href="https://github.com/dithyrambs/RetroSpriteAnimator">RetroSpriteAnimator from GitHub</a>.</p>
-
-<p>So how to get something as simple as the above Flixel snippet? First,&nbsp;<a href="https://docs.unity3d.com/ScriptReference/GameObject.AddComponent.html">add the RetroSpriteAnimator component</a>&nbsp;to the same game object you want to animate. Then, just call the CreateSprite method.</p>
+<p>So how to get something as simple as the above Flixel snippet? First,&nbsp;<a href="https://docs.unity3d.com/ScriptReference/GameObject.AddComponent.html">add the RetroSpriteAnimator component</a>&nbsp;to the same game object you want to animate. Then simply drag the (hopefull already sliced) sprite-sheet to the 'Sprite' field.</p>
+  
+<p>If you'd rather define the sprite via could, you can call the CreateSprite method instead.</p>
 
 <figure data-orig-height="35" data-orig-width="519"><img alt="image" data-orig-height="35" data-orig-width="519" src="https://78.media.tumblr.com/7fcfa12fa473390d393b39d44e0d6184/tumblr_inline_p775duRvLd1sph69g_540.png" /></figure>
 
@@ -41,6 +40,3 @@ Unity component for easily defining and playing 2D sprite animations in script
 <p>Again, feel free to grab&nbsp;<a href="https://github.com/dithyrambs/RetroSpriteAnimator">RetroSpriteAnimator on GitHub</a>, and let me know what you think!</p>
 
 <p>Shoutout to Adam Saltsman (<a href="https://twitter.com/ADAMATOMIC">@ADAMATOMIC</a>), whose open-source Flixel more than inspired RetroSpriteAnimator, and to Luis Zuno (<a href="https://twitter.com/ansimuz">@ansimuz</a>) for his adorably rad Creative Commons art.</p>
-
-Original Post:
-http://gamasutra.com/blogs/AlexBelzer/20180416/316583/Working_with_Pixel_Art_Sprites_in_Unity_Animations.php
