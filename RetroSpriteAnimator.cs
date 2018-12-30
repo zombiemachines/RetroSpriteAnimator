@@ -1,41 +1,92 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class RetroSpriteAnimator : MonoBehaviour {
 
-    private SpriteRenderer _spriteRenderer;
+    public Sprite sprite;
+
+    public string SortingLayer = "Default";
+    public int SortOrder = 1;
+
+    [SerializeField, HideInInspector]
     private Sprite[] _sprites;
+
+    [SerializeField, HideInInspector]
+    private SpriteRenderer _spriteRenderer;
+
     private int _frameIndex = 0;
     private int _animationFrames = 0;
     private float _deltaTime = 0;
-    private List<RetroSpriteAnimation> _animList;
+    private List<RetroSpriteAnimation> _animList =  new List<RetroSpriteAnimation>();
     private RetroSpriteAnimation _currentAnimation;
     private string _previousAnimName = "";
 
-    public void Awake()
+    //Pushing this code back to OnValidate so this stuff doesn't have to execute at runtime
+    private void OnValidate()
     {
-        _spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
-        _animList = new List<RetroSpriteAnimation>();
+        //We don't want this stuff to execute at runtime
+        if (Application.isPlaying ) return;
+
+        if (gameObject.GetComponent<SpriteRenderer>() != null)
+        {
+            _spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+        }
+        else if (gameObject.GetComponentInChildren<SpriteRenderer>() != null)
+        {
+            _spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
+        }
+        else
+        {
+            _spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
+        }
+
+        if ( sprite != null )
+        {
+            _spriteRenderer.sprite = sprite;
+            _spriteRenderer.sortingLayerName = SortingLayer;
+            _spriteRenderer.sortingOrder = SortOrder;
+
+            Object[] data = AssetDatabase.LoadAllAssetRepresentationsAtPath( AssetDatabase.GetAssetPath(sprite) );
+            _sprites = new Sprite[data.Length];
+            for (int i = 0; i < data.Length; i++)   
+            {
+                _sprites[i] = (Sprite)data[i];
+            }
+
+            Debug.Log("Set sprite " + AssetDatabase.GetAssetPath(sprite) + " and created an array of sprites of length " + _sprites.Length );
+        }
     }
 
-    public void CreateSprite(string ResourceLocation, string SortingLayer = "Default") {
+    //Optional methods to create or set sprites in code, if you don't want to use the editor
+    public void CreateSprite(string ResourceLocation, string SortingLayer = "Default", int SortOrder = 1 ) {
         _sprites = Resources.LoadAll<Sprite>(ResourceLocation);
         _spriteRenderer.sortingLayerName = SortingLayer;
+        _spriteRenderer.sortingOrder = SortOrder;
+    }
+
+    public void SetSprite(Sprite[] Resource, string SortingLayer = "Default", int SortOrder = 1)
+    {
+        _sprites = Resource;
+        _spriteRenderer.sortingLayerName = SortingLayer;
+        _spriteRenderer.sortingOrder = SortOrder;
     }
 
     public void Update () {
-        //Reset the frame to 0 if the current animation is different
-        if (_previousAnimName != _currentAnimation.name)
-        {
-            _frameIndex = 0;
-            _previousAnimName = _currentAnimation.name;
-        }
+
 
         //Account for current frame considering variable frame-rate
         _deltaTime += Time.deltaTime;
 
         if ( _currentAnimation != null )
         {
+            //Reset the frame to 0 if the current animation is different
+            if (_previousAnimName != _currentAnimation.name)
+            {
+                _frameIndex = 0;
+                _previousAnimName = _currentAnimation.name;
+            }
+
             while (_deltaTime >= _currentAnimation.frameRate )
             {
                 _deltaTime -= _currentAnimation.frameRate;
@@ -53,9 +104,10 @@ public class RetroSpriteAnimator : MonoBehaviour {
             _spriteRenderer.sprite = _sprites[_currentAnimation.frames[_frameIndex]];
         } else
         {
-            Debug.Log("Animation doesn't exist: "+ _currentAnimation.name);
+            Debug.LogWarning("Animation doesn't exist: ");
         }
     }
+
 
     public void AddAnimation(string Name, int[] Frames, float FrameRate = 30, bool Looped = true, bool FlipX = false, bool FlipY = false)
     {
@@ -67,6 +119,8 @@ public class RetroSpriteAnimator : MonoBehaviour {
         newAnimation.flipX = FlipX;
         newAnimation.flipY= FlipY;
         _animList.Add(newAnimation);
+
+
     }
 
     public void PlayAnimation(string Name)
@@ -83,6 +137,12 @@ public class RetroSpriteAnimator : MonoBehaviour {
             if (_currentAnimation.flipY == true) _spriteRenderer.flipY = true;
             else _spriteRenderer.flipY = false;
         }
+    }
+
+    public bool IsPlayingAnimation(string Name)
+    {
+        if (_currentAnimation.name == Name) return true;
+        else return false;
     }
 
     private void AnimationEndCallback()
